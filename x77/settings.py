@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Scrapy settings for x77 project
 #
 # For simplicity, this file contains only settings considered important or
@@ -72,8 +70,9 @@ ITEM_PIPELINES = {
     'x77.pipelines.SelfieFilesPipeline': 2,
 }
 
-IMAGES_STORE = os.path.join(os.curdir, "data", "AsiaBT")
-FILES_STORE = os.path.join(os.curdir, "data", "AsiaBT")
+CURRENT_DIR = os.path.abspath(os.curdir)
+IMAGES_STORE = os.path.join(CURRENT_DIR, "data", "AsiaBT")
+FILES_STORE = os.path.join(CURRENT_DIR, "data", "AsiaBT")
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
