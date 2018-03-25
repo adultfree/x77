@@ -22,7 +22,7 @@ class SelfieSpider(scrapy.Spider):
 
             for (topic, url) in zip(item['topic'], item['link']):
                 # skip the scenario where the torrent already exists
-                dirname = topic.replace('/', '.').replace('?', '.')
+                dirname = topic.replace('/', '.').replace('?', '.').replace(':', '.')
                 dirname = os.path.join(settings.IMAGES_STORE, dirname)
                 if os.path.isdir(dirname) and glob.glob(os.path.join(dirname, "*.torrent")):
                     continue
@@ -38,7 +38,7 @@ class SelfieSpider(scrapy.Spider):
         else:
             item = TopicContentItem()
             item['image_urls'] = response.xpath('//div[@id="read_tpc"]/*/img/@src | //div[@id="read_tpc"]/img/@src').extract()
-            item['dirname'] = response.xpath('//h1[@id="subject_tpc"]/text()').extract()[1].replace('/', '.').replace('?', '.')
+            item['dirname'] = response.xpath('//h1[@id="subject_tpc"]/text()').extract()[1].replace('/', '.').replace('?', '.').replace(':', '.')
             context_list = response.xpath('//div[@id="read_tpc"]/*/text() | //div[@id="read_tpc"]/text()').extract()[0:-2]
             context_list = [e for e in context_list if e.strip()]
             item['context'] = "%s\n\n%s\n%s" % (response.url, "\n".join(context_list).strip(), "【下载地址】：" +

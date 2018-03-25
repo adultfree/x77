@@ -95,3 +95,6 @@ FILES_STORE = os.path.join(CURRENT_DIR, "data", "AsiaBT")
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 RETRY_TIMES = 10
+
+# Image Download 允许redirect
+MEDIA_ALLOW_REDIRECTS = True
