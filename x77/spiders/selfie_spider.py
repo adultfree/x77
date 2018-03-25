@@ -1,11 +1,13 @@
 # coding=utf-8
+import os
+import glob
+from x77 import settings
 from x77.items import *
 
 
 class SelfieSpider(scrapy.Spider):
     name = "selfie"
-    # 酒店幹白嫩的小女友國語對白，技术很好干的很给力鸡巴破皮 绝版香港之马交浴室现场直击
-    start_urls = ["http://x77128.com/bbs/thread.php?fid=20&page=" + str(i) for i in range(1, 4)]
+    start_urls = ["http://x77113.com/bbs/thread.php?fid=20&page=" + str(i) for i in range(1, 25)]
 
     def parse(self, response):
         item = TopicItem()
@@ -14,8 +16,13 @@ class SelfieSpider(scrapy.Spider):
         ref = response.css('.subject_t').xpath('@href').extract()
         item['topic'] = name
         item['link'] = [head + n for n in ref]
-        i = 0
-        for url in item['link']:
+
+        for (topic, url) in zip(item['topic'], item['link']):
+            # skip the scenario where the torrent already exists
+            dirname = topic.replace('/', '|')
+            dirname = os.path.join(settings.IMAGES_STORE, dirname)
+            if os.path.isdir(dirname) and glob.glob(os.path.join(dirname, "*.torrent")):
+                continue
             yield scrapy.Request(url, callback=self.parse_item)
 
     def parse_item(self, response):
