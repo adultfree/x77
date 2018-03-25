@@ -8,11 +8,15 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
+import os
 
 BOT_NAME = 'x77'
 
 SPIDER_MODULES = ['x77.spiders']
 NEWSPIDER_MODULE = 'x77.spiders'
+
+# x77 URL
+HOST = "x77113.com"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'x77 (+http://www.yourdomain.com)'
@@ -21,12 +25,12 @@ NEWSPIDER_MODULE = 'x77.spiders'
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 60
+CONCURRENT_REQUESTS = 16
 
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 4
+DOWNLOAD_DELAY = 2
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # CONCURRENT_REQUESTS_PER_IP = 16
@@ -68,8 +72,8 @@ ITEM_PIPELINES = {
     'x77.pipelines.SelfieFilesPipeline': 2,
 }
 
-IMAGES_STORE = '/home/baib2/亚洲BT/a'
-FILES_STORE = '/home/baib2/亚洲BT/a'
+IMAGES_STORE = os.path.join(os.curdir, "data", "AsiaBT")
+FILES_STORE = os.path.join(os.curdir, "data", "AsiaBT")
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html

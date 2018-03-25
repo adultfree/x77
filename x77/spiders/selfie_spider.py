@@ -7,7 +7,7 @@ from x77.items import *
 
 class SelfieSpider(scrapy.Spider):
     name = "selfie"
-    start_urls = ["http://x77113.com/bbs/thread.php?fid=20&page=" + str(i) for i in range(1, 25)]
+    start_urls = ["http://%s/bbs/thread.php?fid=20&page=%d" % (settings.HOST, i) for i in range(1, 25)]
 
     def parse(self, response):
         item = TopicItem()
