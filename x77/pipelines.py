@@ -13,6 +13,7 @@ from scrapy.pipelines.images import ImagesPipeline
 from scrapy.pipelines.files import FilesPipeline
 import requests
 
+
 class SelfieImagesPipeline(ImagesPipeline):
     def get_media_requests(self, item, info):
         dirname = item['dirname']
@@ -30,13 +31,12 @@ class SelfieImagesPipeline(ImagesPipeline):
             filepath = os.path.join(dirpath, filename)
             if os.path.exists(os.path.join(filepath)):
                 continue
-            yield scrapy.Request(image_url, meta={'filename': filepath})
+            yield scrapy.Request(image_url, meta={'filename': os.path.join(dirname, filename)})
         # write the context file
         context_file = os.path.join(dirpath, 'info.txt')
         if not os.path.exists(context_file):
             with open(context_file, 'w') as file:
                 file.write(item['context'])
-
 
     def file_path(self, request, response=None, info=None):
         # start of deprecation warning block (can be removed in the future)

@@ -5,12 +5,19 @@ from x77 import settings
 from x77.items import *
 
 
+def need_refresh(text):
+    if text == "请刷新页面或按键盘F5":
+        print("NEED REFRESH!!!")
+        return True
+    return False
+
+
 class SelfieSpider(scrapy.Spider):
     name = "selfie"
-    start_urls = ["http://%s/bbs/thread.php?fid=20&page=%d" % (settings.HOST, i) for i in range(28, 29)]
+    start_urls = ["http://%s/bbs/thread.php?fid=20&page=%d" % (settings.HOST, i) for i in range(1, 30)]
 
     def parse(self, response):
-        if response.body.decode("GBK") == "请刷新页面或按键盘F5":
+        if need_refresh(response.text):
             yield scrapy.Request(response.url, callback=self.parse, dont_filter=True)
         else:
             item = TopicItem()
@@ -33,7 +40,7 @@ class SelfieSpider(scrapy.Spider):
                 yield scrapy.Request(url, callback=self.parse_item)
 
     def parse_item(self, response):
-        if response.body.decode("GBK") == "请刷新页面或按键盘F5":
+        if need_refresh(response.text):
             yield scrapy.Request(response.url, callback=self.parse_item, dont_filter=True)
         else:
             item = TopicContentItem()
