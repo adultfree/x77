@@ -35,7 +35,7 @@ class SelfieImagesPipeline(ImagesPipeline):
         # write the context file
         context_file = os.path.join(dirpath, 'info.txt')
         if not os.path.exists(context_file):
-            with open(context_file, 'w') as file:
+            with open(context_file, 'w', encoding="utf-8") as file:
                 file.write(item['context'])
 
     def file_path(self, request, response=None, info=None):

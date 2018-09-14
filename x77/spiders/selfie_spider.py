@@ -6,7 +6,7 @@ from x77.items import *
 
 
 def need_refresh(text):
-    if text == "请刷新页面或按键盘F5":
+    if text.endswith("F5"):
         print("NEED REFRESH!!!")
         return True
     return False
@@ -29,14 +29,10 @@ class SelfieSpider(scrapy.Spider):
 
             for (topic, url) in zip(item['topic'], item['link']):
                 # skip the scenario where the torrent already exists
-                dirname = topic.replace('/', '.').replace('?', '.').replace(':', '.')
-                dirname = os.path.join(settings.IMAGES_STORE, dirname)
-                if os.path.isdir(dirname) and glob.glob(os.path.join(dirname, "*.torrent")):
+                dirpath = topic.replace('/', '.').replace('?', '.').replace(':', '.')
+                dirpath = os.path.join(settings.IMAGES_STORE, "亚洲BT", dirpath)
+                if os.path.isdir(dirpath) and glob.glob(os.path.join(dirpath, "*.torrent")):
                     continue
-                # # temporary
-                # if not topic.startswith("林美仑"):
-                #     continue
-                # # temporary
                 yield scrapy.Request(url, callback=self.parse_item)
 
     def parse_item(self, response):
@@ -45,7 +41,7 @@ class SelfieSpider(scrapy.Spider):
         else:
             item = TopicContentItem()
             item['image_urls'] = response.xpath('//div[@id="read_tpc"]/*/img/@src | //div[@id="read_tpc"]/img/@src').extract()
-            item['dirname'] = response.xpath('//h1[@id="subject_tpc"]/text()').extract()[1].replace('/', '.').replace('?', '.').replace(':', '.')
+            item['dirname'] = os.path.join("亚洲BT", response.xpath('//h1[@id="subject_tpc"]/text()').extract()[1].replace('/', '.').replace('?', '.').replace(':', '.'))
             context_list = response.xpath('//div[@id="read_tpc"]/*/text() | //div[@id="read_tpc"]/text()').extract()[0:-2]
             context_list = [e for e in context_list if e.strip()]
             item['context'] = "%s\n\n%s\n%s" % (response.url, "\n".join(context_list).strip(), "【下载地址】：" +

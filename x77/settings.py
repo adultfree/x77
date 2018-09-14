@@ -14,7 +14,7 @@ SPIDER_MODULES = ['x77.spiders']
 NEWSPIDER_MODULE = 'x77.spiders'
 
 # x77 URL
-HOST = "x77113.com"
+HOST = "1.x77113.com"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'x77 (+http://www.yourdomain.com)'
@@ -28,13 +28,13 @@ CONCURRENT_REQUESTS = 64
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 2
+DOWNLOAD_DELAY = 0.5
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-COOKIES_ENABLED = False
+COOKIES_ENABLED = True
 
 # Disable Telnet Console (enabled by default)
 # TELNETCONSOLE_ENABLED = False
@@ -71,8 +71,8 @@ ITEM_PIPELINES = {
 }
 
 CURRENT_DIR = os.path.abspath(os.curdir)
-IMAGES_STORE = os.path.join(CURRENT_DIR, "data", "AsiaBT")
-FILES_STORE = os.path.join(CURRENT_DIR, "data", "AsiaBT")
+IMAGES_STORE = os.path.join(CURRENT_DIR, "data")
+FILES_STORE = os.path.join(CURRENT_DIR, "data")
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
