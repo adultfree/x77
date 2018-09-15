@@ -32,7 +32,7 @@ class SelfieImagesPipeline(ImagesPipeline):
             if os.path.exists(os.path.join(filepath)):
                 continue
             yield scrapy.Request(image_url, meta={'filename': os.path.join(dirname, filename)})
-        if item['context']:
+        if 'context' in item and item['context']:
             # write the context file
             context_file = os.path.join(dirpath, 'info.txt')
             if not os.path.exists(context_file):

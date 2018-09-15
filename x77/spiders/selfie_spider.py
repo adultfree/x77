@@ -14,7 +14,7 @@ def need_refresh(text):
 
 class SelfieSpider(scrapy.Spider):
     name = "selfie"
-    start_urls = ["http://%s/bbs/thread.php?fid=20&page=%d" % (settings.HOST, i) for i in range(1, 30)]
+    start_urls = ["http://%s/bbs/thread.php?fid=20&page=%d" % (settings.HOST, i) for i in range(*settings.PAGE_RANGE)]
 
     def parse(self, response):
         if need_refresh(response.text):
