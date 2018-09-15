@@ -32,11 +32,12 @@ class SelfieImagesPipeline(ImagesPipeline):
             if os.path.exists(os.path.join(filepath)):
                 continue
             yield scrapy.Request(image_url, meta={'filename': os.path.join(dirname, filename)})
-        # write the context file
-        context_file = os.path.join(dirpath, 'info.txt')
-        if not os.path.exists(context_file):
-            with open(context_file, 'w', encoding="utf-8") as file:
-                file.write(item['context'])
+        if item['context']:
+            # write the context file
+            context_file = os.path.join(dirpath, 'info.txt')
+            if not os.path.exists(context_file):
+                with open(context_file, 'w', encoding="utf-8") as file:
+                    file.write(item['context'])
 
     def file_path(self, request, response=None, info=None):
         # start of deprecation warning block (can be removed in the future)

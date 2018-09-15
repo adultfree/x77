@@ -14,7 +14,7 @@ SPIDER_MODULES = ['x77.spiders']
 NEWSPIDER_MODULE = 'x77.spiders'
 
 # x77 URL
-HOST = "1.x77113.com"
+HOST = "2.x77113.com"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'x77 (+http://www.yourdomain.com)'
