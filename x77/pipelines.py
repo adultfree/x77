@@ -20,24 +20,25 @@ class SelfieImagesPipeline(ImagesPipeline):
         dirpath = os.path.join(settings.IMAGES_STORE, dirname)
         if not os.path.isdir(dirpath):
             os.makedirs(dirpath)
-        i = 0
-        for image_url in item['image_urls']:
-            filename = 'error'
-            i += 1
-            if i < 10:
-                filename = '0' + str(i) + '.jpg'
-            elif i < 100:
-                filename = str(i) + '.jpg'
-            filepath = os.path.join(dirpath, filename)
-            if os.path.exists(os.path.join(filepath)):
-                continue
-            yield scrapy.Request(image_url, meta={'filename': os.path.join(dirname, filename)})
-        if 'context' in item and item['context']:
-            # write the context file
-            context_file = os.path.join(dirpath, 'info.txt')
-            if not os.path.exists(context_file):
-                with open(context_file, 'w', encoding="utf-8") as file:
-                    file.write(item['context'])
+        if 'image_urls' in item:
+            i = 0
+            for image_url in item['image_urls']:
+                filename = 'error'
+                i += 1
+                if i < 10:
+                    filename = '0' + str(i) + '.jpg'
+                elif i < 100:
+                    filename = str(i) + '.jpg'
+                filepath = os.path.join(dirpath, filename)
+                if os.path.exists(os.path.join(filepath)):
+                    continue
+                yield scrapy.Request(image_url, meta={'filename': os.path.join(dirname, filename)})
+            if 'context' in item and item['context']:
+                # write the context file
+                context_file = os.path.join(dirpath, 'info.txt')
+                if not os.path.exists(context_file):
+                    with open(context_file, 'w', encoding="utf-8") as file:
+                        file.write(item['context'])
 
     def file_path(self, request, response=None, info=None):
         # start of deprecation warning block (can be removed in the future)
@@ -172,3 +173,19 @@ Content-Disposition: form-data; name="rulesubmit"
         # end of deprecation warning block
         filename = request.meta['filename']
         return '%s' % filename
+
+
+class NovelFilesPipeline(FilesPipeline):
+    def get_media_requests(self, item, info):
+        # 保存文件内容即可
+        dirname = item['dirname']
+        dirpath = os.path.join(settings.IMAGES_STORE, dirname)
+        if not os.path.isdir(dirpath):
+            os.makedirs(dirpath)
+        if 'context' in item:
+            filepath = os.path.join(dirpath, item['filename'])
+            while os.path.exists(filepath):
+                paths = os.path.splitext(filepath)
+                filepath = paths[0] + 'x' + paths[1]
+            with open(filepath, 'w', encoding="utf-8") as file:
+                file.write(item['context'])

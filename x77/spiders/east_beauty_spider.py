@@ -5,9 +5,9 @@ from x77.items import *
 from x77.spiders import need_refresh
 
 
-class SelfiePhotoSpider(scrapy.Spider):
-    name = "selfie_photo"
-    start_urls = ["http://%s/bbs/thread.php?fid=18&page=%d" % (settings.HOST, i) for i in range(*settings.PAGE_RANGE)]
+class EastBeautySpider(scrapy.Spider):
+    name = "east_beauty"
+    start_urls = ["http://%s/bbs/thread.php?fid=6&page=%d" % (settings.HOST, i) for i in range(*settings.PAGE_RANGE)]
 
     def parse(self, response):
         if need_refresh(response.text):
@@ -29,5 +29,5 @@ class SelfiePhotoSpider(scrapy.Spider):
         else:
             item = TopicContentItem()
             item['image_urls'] = response.xpath('//div[@id="read_tpc"]/*/img/@src | //div[@id="read_tpc"]/img/@src').extract()
-            item['dirname'] = os.path.join("网友自拍", response.xpath('//h1[@id="subject_tpc"]/text()').extract()[1].replace('/', '.').replace('?', '.').replace(':', '.'))
+            item['dirname'] = os.path.join("唯美清纯", response.xpath('//h1[@id="subject_tpc"]/text()').extract()[1].replace('/', '.').replace('?', '.').replace(':', '.'))
             yield item

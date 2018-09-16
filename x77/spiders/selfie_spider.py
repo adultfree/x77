@@ -1,15 +1,9 @@
-import os
 import glob
+import os
 
 from x77 import settings
 from x77.items import *
-
-
-def need_refresh(text):
-    if text.endswith("F5"):
-        print("NEED REFRESH!!!")
-        return True
-    return False
+from x77.spiders import need_refresh
 
 
 class SelfieSpider(scrapy.Spider):
@@ -45,7 +39,7 @@ class SelfieSpider(scrapy.Spider):
             context_list = response.xpath('//div[@id="read_tpc"]/*/text() | //div[@id="read_tpc"]/text()').extract()[0:-2]
             context_list = [e for e in context_list if e.strip()]
             item['context'] = "%s\n\n%s\n%s" % (response.url, "\n".join(context_list).strip(), "【下载地址】：" +
-                                        ", ".join(response.xpath('//div[@id="read_tpc"]/*/a/@href | //div[@id="read_tpc"]/a/@href').extract()).strip())
+                                                ", ".join(response.xpath('//div[@id="read_tpc"]/*/a/@href | //div[@id="read_tpc"]/a/@href').extract()).strip())
             item['context'].encode().decode("UTF-8")
             item['torrents'] = response.xpath('//div[@id="read_tpc"]/*/a/@href | //div[@id="read_tpc"]/a/@href').extract()
             yield item

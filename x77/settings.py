@@ -14,7 +14,7 @@ SPIDER_MODULES = ['x77.spiders']
 NEWSPIDER_MODULE = 'x77.spiders'
 
 # x77 URL
-HOST = "2.x77113.com"
+HOST = "4.x77113.com"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'x77 (+http://www.yourdomain.com)'
@@ -35,6 +35,8 @@ DOWNLOAD_DELAY = 0.5
 
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = True
+
+LOG_LEVEL = 'DEBUG'
 
 # Disable Telnet Console (enabled by default)
 # TELNETCONSOLE_ENABLED = False
@@ -68,6 +70,7 @@ COOKIES_ENABLED = True
 ITEM_PIPELINES = {
     'x77.pipelines.SelfieImagesPipeline': 1,
     'x77.pipelines.SelfieFilesPipeline': 2,
+    'x77.pipelines.NovelFilesPipeline': 3,
 }
 
 CURRENT_DIR = os.path.abspath(os.curdir)
