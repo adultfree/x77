@@ -11,9 +11,16 @@ class TopicItem(scrapy.Item):
     link = scrapy.Field()
 
 
-class TopicContentItem(scrapy.Item):
-    image_urls = scrapy.Field()
-    filename = scrapy.Field()
+class ImageItem(scrapy.Item):
+    referer = scrapy.Field()
+    images = scrapy.Field()
+    dirname = scrapy.Field()
+
+
+class FileItem(scrapy.Item):
+    referer = scrapy.Field()
+    files = scrapy.Field()
+    filenames = scrapy.Field()
     dirname = scrapy.Field()
     context = scrapy.Field()
     torrents = scrapy.Field()

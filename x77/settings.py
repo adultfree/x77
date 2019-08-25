@@ -14,7 +14,7 @@ SPIDER_MODULES = ['x77.spiders']
 NEWSPIDER_MODULE = 'x77.spiders'
 
 # x77 URL
-HOST = "4.x77113.com"
+HOST = "x771801.com"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'x77 (+http://www.yourdomain.com)'
@@ -68,9 +68,8 @@ LOG_LEVEL = 'DEBUG'
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'x77.pipelines.SelfieImagesPipeline': 1,
-    'x77.pipelines.SelfieFilesPipeline': 2,
-    'x77.pipelines.NovelFilesPipeline': 3,
+    'x77.pipelines.x77ImagesPipeline': 1,
+    'x77.pipelines.x77FilesPipeline': 2,
 }
 
 CURRENT_DIR = os.path.abspath(os.curdir)
@@ -103,4 +102,4 @@ RETRY_TIMES = 10
 MEDIA_ALLOW_REDIRECTS = True
 
 # 下载页数，目前所有spider统一使用以下范围
-PAGE_RANGE = (1, 3)
+PAGE_RANGE = (5, 6)

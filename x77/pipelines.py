@@ -3,36 +3,35 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 import os
-from urllib.parse import to_bytes
-from lxml import html
+
 import scrapy
-import urllib
-from . import settings
-from scrapy.http import Request
-from scrapy.pipelines.images import ImagesPipeline
 from scrapy.pipelines.files import FilesPipeline
-import requests
+from scrapy.pipelines.images import ImagesPipeline
+
+from . import settings
 
 
-class SelfieImagesPipeline(ImagesPipeline):
+class x77ImagesPipeline(ImagesPipeline):
+
+    # 当一个Request的所有image下载请求返回后，会回调该函数
+    def item_completed(self, results, item, info):
+        return super().item_completed(results, item, info)
+
     def get_media_requests(self, item, info):
-        dirname = item['dirname']
-        dirpath = os.path.join(settings.IMAGES_STORE, dirname)
-        if not os.path.isdir(dirpath):
-            os.makedirs(dirpath)
-        if 'image_urls' in item:
-            i = 0
-            for image_url in item['image_urls']:
-                filename = 'error'
-                i += 1
-                if i < 10:
-                    filename = '0' + str(i) + '.jpg'
-                elif i < 100:
-                    filename = str(i) + '.jpg'
-                filepath = os.path.join(dirpath, filename)
-                if os.path.exists(os.path.join(filepath)):
-                    continue
-                yield scrapy.Request(image_url, meta={'filename': os.path.join(dirname, filename)})
+        # item中包含images才处理image的下载
+        if 'images' not in item: return
+
+        # 为images创建一个目录用于存放图片
+        dirpath = os.path.join(settings.IMAGES_STORE, item['dirname'])
+        os.makedirs(dirpath, exist_ok=True)
+
+        for i, image_url in enumerate(item['images']):
+            _, extension = os.path.splitext(image_url)
+            # 图片文件名范围001~009
+            filename = "%03d%s" % (i + 1, extension)
+            filepath = os.path.join(dirpath, filename)
+            yield scrapy.Request(image_url, headers={"Referer": item['referer']}, meta={'filename': filepath})
+
             if 'context' in item and item['context']:
                 # write the context file
                 context_file = os.path.join(dirpath, 'info.txt')
@@ -41,34 +40,10 @@ class SelfieImagesPipeline(ImagesPipeline):
                         file.write(item['context'])
 
     def file_path(self, request, response=None, info=None):
-        # start of deprecation warning block (can be removed in the future)
-        def _warn():
-            from scrapy.exceptions import ScrapyDeprecationWarning
-            import warnings
-            warnings.warn('ImagesPipeline.image_key(url) and file_key(url) methods are deprecated, '
-                          'please use file_path(request, response=None, info=None) instead',
-                          category=ScrapyDeprecationWarning, stacklevel=1)
-
-        # check if called from image_key or file_key with url as first argument
-        if not isinstance(request, Request):
-            _warn()
-            url = request
-        else:
-            url = request.url
-
-        # detect if file_key() or image_key() methods have been overridden
-        if not hasattr(self.file_key, '_base'):
-            _warn()
-            return self.file_key(url)
-        elif not hasattr(self.image_key, '_base'):
-            _warn()
-            return self.image_key(url)
-            # end of deprecation warning block
-        filename = request.meta['filename']
-        return '%s' % filename
+        return request.meta["filename"]
 
 
-class SelfieFilesPipeline(FilesPipeline):
+class x77FilesPipeline(FilesPipeline):
     headers = {
         'content-type': "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW",
         'connection': "keep-alive",
@@ -95,84 +70,36 @@ Content-Disposition: form-data; name="rulesubmit"
 请点这里下载
 ------WebKitFormBoundary7MA4YWxkTrZu0gW"""
 
-    def get_media_requests(self, item, info):
+    def item_completed(self, results, item, info):
+        items = super().item_completed(results, item, info)
+        return items
+
+    def handle_torrent_download(self, item, info):
         # download the torrent files
         dirname = item['dirname']
         if not os.path.isdir(os.path.join(settings.FILES_STORE, dirname)):
             os.makedirs(os.path.join(settings.FILES_STORE, dirname))
-        if 'torrents' in item:
-            for torrent in item['torrents']:
-                if torrent.find("imedown") > 0:
-                    filename = urllib.parse.urlparse(torrent).query.split('=')[-1] + '.torrent'
-                    torrentlink = "http://www.imedown.info/up/" + filename
-                    filename = os.path.join(dirname, filename)
-                    if os.path.exists(os.path.join(settings.FILES_STORE, filename)):
-                        continue
-                    yield scrapy.Request(torrentlink, meta={'filename': filename})
-                elif torrent.find("luludown") > 0:
-                    filename = urllib.parse.urlparse(torrent).query.split('=')[-1] + '.torrent'
-                    torrentlink = "http://www.luludown.info/up/" + filename
-                    body = self.bodyStartWithRef + filename + self.bodyEnd
-                    filename = os.path.join(dirname, filename)
-                    if os.path.exists(os.path.join(settings.FILES_STORE, filename)):
-                        continue
-                    yield scrapy.Request(torrentlink, None, 'POST', self.headers, body,
-                                         meta={'filename': filename})
-                elif torrent.find("xhh8") > 0:
-                    filename = urllib.parse.urlparse(torrent).query.split('=')[-1]
-                    if torrent.find("avsd") > 0:
-                        # deal with torrent download page URL:
-                        # http://www1.xhh8.com/avsd.php?hash=20AJaVrwyz
-                        link = "http://www.downdvs.com:8080/load.php"
-                        body = self.bodyStartWithRef + filename + self.bodyEnd
-                        filename = os.path.join(dirname, filename + ".torrent")
-                        if os.path.exists(os.path.join(settings.FILES_STORE, filename)):
-                            continue
-                        yield scrapy.Request(link, None, 'POST', self.headers, body,
-                                             meta={'filename': filename})
-                    elif torrent.find("x7btc") > 0:
-                        # deal with torrent download page URL:
-                        # http://www.xhh8.info/bt/cl/x7btc.php?hash=18165f592f47736211c3d204d0dfaa812e5161f48ca
-                        filename = urllib.parse.urlparse(torrent).query.split('=')[-1]
-                        filename = os.path.join(dirname, filename + ".torrent")
-                        if os.path.exists(os.path.join(settings.FILES_STORE, filename)):
-                            continue
-                        doc = html.fromstring(requests.get(torrent).content)
-                        url = doc.xpath('//*[@id="asddf"]')[0].attrib['href']
-                        yield scrapy.Request(url, None, 'GET', meta={'filename': filename})
-                    else:
-                        body = self.bodyStartWithMcncc + filename + self.bodyEnd
-                        filename = os.path.join(dirname, filename + ".torrent")
-                        if os.path.exists(os.path.join(settings.FILES_STORE, filename)):
-                            continue
-                        yield scrapy.Request(torrent, None, 'POST', self.headers, body,
-                                             meta={'filename': filename})
-                else:
-                    print(torrent)
+        for filename, link in zip(item['filenames'], item['files']):
+            # 如果文件已存在，直接忽略该文件
+            if os.path.exists(os.path.join(settings.FILES_STORE, filename)):
+                continue
+            if link.find("aae3") > 0 or link.find("imedown") > 0:
+                yield scrapy.Request(link, meta={'filename': filename})
+            elif link.find("luludown") > 0:
+                body = self.bodyStartWithRef + filename + self.bodyEnd
+                yield scrapy.Request(link, None, 'POST', self.headers, body, meta={'filename': filename})
+            else:
+                print(link)
+
+    def get_media_requests(self, item, info):
+        # item中包含files才处理file的下载
+        if 'files' not in item: return
+
+        if item['filenames'][0].endswith("torrent"):
+            yield from self.handle_torrent_download(item, info)
 
     def file_path(self, request, response=None, info=None):
-        # start of deprecation warning block (can be removed in the future)
-        def _warn():
-            from scrapy.exceptions import ScrapyDeprecationWarning
-            import warnings
-            warnings.warn('FilesPipeline.file_key(url) method is deprecated, please use '
-                          'file_path(request, response=None, info=None) instead',
-                          category=ScrapyDeprecationWarning, stacklevel=1)
-
-        # check if called from file_key with url as first argument
-        if not isinstance(request, Request):
-            _warn()
-            url = request
-        else:
-            url = request.url
-
-        # detect if file_key() method has been overridden
-        if not hasattr(self.file_key, '_base'):
-            _warn()
-            return self.file_key(url)
-        # end of deprecation warning block
-        filename = request.meta['filename']
-        return '%s' % filename
+        return request.meta["filename"]
 
 
 class NovelFilesPipeline(FilesPipeline):
