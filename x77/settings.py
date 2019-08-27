@@ -6,6 +6,7 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
+import datetime
 import os
 
 BOT_NAME = 'x77'
@@ -37,6 +38,7 @@ DOWNLOAD_DELAY = 0.5
 COOKIES_ENABLED = False
 
 LOG_LEVEL = 'DEBUG'
+LOG_FILE = "./scrapy-%s.log" % datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
 # Disable Telnet Console (enabled by default)
 # TELNETCONSOLE_ENABLED = False

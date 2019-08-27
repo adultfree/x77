@@ -89,7 +89,7 @@ Content-Disposition: form-data; name="rulesubmit"
                 body = self.bodyStartWithRef + filename + self.bodyEnd
                 yield scrapy.Request(link, None, 'POST', self.headers, body, meta={'filename': filepath})
             else:
-                print(link)
+                info.spider.logger.error("没有合适的模板处理：%s" % link)
 
     def get_media_requests(self, item, info):
         # item中包含files才处理file的下载

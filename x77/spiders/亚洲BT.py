@@ -11,7 +11,7 @@ from x77.spiders.spider import Spider
 class AsiaBTSpider(Spider):
     name = "asia_bt"
     # page_range = settings.PAGE_RANGE
-    page_range = (1, 2)
+    page_range = (10, 11)
     start_urls = ["http://%s/bbs/thread.php?fid=20&page=%d" % (settings.HOST, i) for i in range(*page_range)]
 
     def parse_page(self, response):
@@ -61,7 +61,7 @@ class AsiaBTSpider(Spider):
                 elif torrent.find("luludown") > 0:
                     item['files'].append("http://www.luludown.info/up/" + urllib.parse.urlparse(torrent).query.split('=')[-1] + '.torrent')
                 else:
-                    self.logger.error("没有合适的模板：%s" % torrent)
+                    self.logger.error("没有合适的模板处理种子：%s" % torrent)
         # 对于aae3的网站，在其逻辑中已经yield处理了
         # 对于其它网站，items中应该保存着所有的链接，进行统一处理即可
         if len(item['files']) > 0: yield item

@@ -28,6 +28,7 @@ class Spider(scrapy.Spider):
         head = response.xpath('//head/base/@href').extract_first()
         name = response.css('.subject_t').xpath('text()').extract()
         ref = response.css('.subject_t').xpath('@href').extract()
+        times = response.css('.subject_t').xpath("../../td[@class='author']/p/a/@title").extract()
         item['topic'] = name
         item['link'] = [head + n for n in ref]
         return item
