@@ -14,13 +14,12 @@ class TopicItem(scrapy.Item):
 class ImageItem(scrapy.Item):
     referer = scrapy.Field()
     images = scrapy.Field()
-    dirname = scrapy.Field()
+    dirpath = scrapy.Field()
+    context = scrapy.Field()
 
 
 class FileItem(scrapy.Item):
     referer = scrapy.Field()
     files = scrapy.Field()
     filenames = scrapy.Field()
-    dirname = scrapy.Field()
-    context = scrapy.Field()
-    torrents = scrapy.Field()
+    dirpath = scrapy.Field()

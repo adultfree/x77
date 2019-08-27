@@ -22,7 +22,7 @@ class x77ImagesPipeline(ImagesPipeline):
         if 'images' not in item: return
 
         # 为images创建一个目录用于存放图片
-        dirpath = os.path.join(settings.IMAGES_STORE, item['dirname'])
+        dirpath = os.path.join(settings.IMAGES_STORE, item['dirpath'])
         os.makedirs(dirpath, exist_ok=True)
 
         for i, image_url in enumerate(item['images']):
@@ -75,19 +75,19 @@ Content-Disposition: form-data; name="rulesubmit"
         return items
 
     def handle_torrent_download(self, item, info):
-        # download the torrent files
-        dirname = item['dirname']
-        if not os.path.isdir(os.path.join(settings.FILES_STORE, dirname)):
-            os.makedirs(os.path.join(settings.FILES_STORE, dirname))
+        dirpath = item['dirpath']
+        if not os.path.isdir(os.path.join(settings.FILES_STORE, dirpath)):
+            os.makedirs(os.path.join(settings.FILES_STORE, dirpath))
         for filename, link in zip(item['filenames'], item['files']):
             # 如果文件已存在，直接忽略该文件
-            if os.path.exists(os.path.join(settings.FILES_STORE, filename)):
+            filepath = os.path.join(settings.FILES_STORE, dirpath, filename)
+            if os.path.exists(filepath):
                 continue
-            if link.find("aae3") > 0 or link.find("imedown") > 0:
-                yield scrapy.Request(link, meta={'filename': filename})
+            if link.find("rmdown") > 0 or link.find("imedown") > 0:
+                yield scrapy.Request(link, meta={'filename': filepath})
             elif link.find("luludown") > 0:
                 body = self.bodyStartWithRef + filename + self.bodyEnd
-                yield scrapy.Request(link, None, 'POST', self.headers, body, meta={'filename': filename})
+                yield scrapy.Request(link, None, 'POST', self.headers, body, meta={'filename': filepath})
             else:
                 print(link)
 
@@ -105,8 +105,8 @@ Content-Disposition: form-data; name="rulesubmit"
 class NovelFilesPipeline(FilesPipeline):
     def get_media_requests(self, item, info):
         # 保存文件内容即可
-        dirname = item['dirname']
-        dirpath = os.path.join(settings.IMAGES_STORE, dirname)
+        dirpath = item['dirpath']
+        dirpath = os.path.join(settings.IMAGES_STORE, dirpath)
         if not os.path.isdir(dirpath):
             os.makedirs(dirpath)
         if 'context' in item:

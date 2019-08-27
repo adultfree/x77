@@ -14,7 +14,7 @@ SPIDER_MODULES = ['x77.spiders']
 NEWSPIDER_MODULE = 'x77.spiders'
 
 # x77 URL
-HOST = "x771801.com"
+HOST = "x77631.com"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'x77 (+http://www.yourdomain.com)'
@@ -34,7 +34,7 @@ DOWNLOAD_DELAY = 0.5
 # CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-COOKIES_ENABLED = True
+COOKIES_ENABLED = False
 
 LOG_LEVEL = 'DEBUG'
 
