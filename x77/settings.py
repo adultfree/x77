@@ -104,4 +104,4 @@ RETRY_TIMES = 10
 MEDIA_ALLOW_REDIRECTS = True
 
 # 下载页数，目前所有spider统一使用以下范围
-PAGE_RANGE = (5, 6)
+PAGE_RANGE = (1, 10)

@@ -9,8 +9,8 @@ from x77.spiders.spider import Spider
 # 网友自拍
 class SelfiePhotoSpider(Spider):
     name = "selfie_photo"
-    page_range = (11, 12)
-    # page_range = settings.PAGE_RANGE
+    page_range = settings.PAGE_RANGE
+    # page_range = (11, 12)
     start_urls = ["http://%s/bbs/thread.php?fid=18&page=%d" % (settings.HOST, i) for i in range(*page_range)]
 
     def parse_page(self, response):

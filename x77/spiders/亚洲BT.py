@@ -10,8 +10,8 @@ from x77.spiders.spider import Spider
 
 class AsiaBTSpider(Spider):
     name = "asia_bt"
-    # page_range = settings.PAGE_RANGE
-    page_range = (10, 11)
+    page_range = settings.PAGE_RANGE
+    # page_range = (10, 11)
     start_urls = ["http://%s/bbs/thread.php?fid=20&page=%d" % (settings.HOST, i) for i in range(*page_range)]
 
     def parse_page(self, response):
