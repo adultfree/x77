@@ -3,15 +3,19 @@ import os
 from apscheduler.schedulers.blocking import BlockingScheduler
 
 def start_crawling():
-    os.system("scrapy crawl selfie_photo")
-    os.system("scrapy crawl asia_bt")
+    cmd = "scrapy crawl selfie_photo"
+    print("Executing command '%s'" % cmd)
+    os.system(cmd)
+    cmd = "scrapy crawl asia_bt"
+    print("Executing command '%s'" % cmd)
+    os.system(cmd)
 
 
 def create_apscheduler_jobs():
     sched = BlockingScheduler()
 
     # 每整分钟执行
-    sched.add_job(start_crawling, "cron", hour="*")
+    sched.add_job(start_crawling, "cron", hour="*", minute="20")
     sched.start()
 
 
