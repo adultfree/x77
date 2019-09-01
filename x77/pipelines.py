@@ -42,7 +42,6 @@ class x77ImagesPipeline(ImagesPipeline):
 
     def file_path(self, request, response=None, info=None):
         # file_path必须使用相对路径，因为在scrapy中会用源路径.join(相对路径)
-        print("filepath: %s" % request.meta["filename"])
         return request.meta["filename"]
 
 
@@ -105,7 +104,6 @@ Content-Disposition: form-data; name="rulesubmit"
 
     def file_path(self, request, response=None, info=None):
         # file_path必须使用相对路径，因为在scrapy中会用源路径.join(相对路径)
-        print("filepath: %s" % request.meta["filename"])
         return request.meta["filename"]
 
 

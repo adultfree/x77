@@ -15,7 +15,7 @@ def create_apscheduler_jobs():
     sched = BlockingScheduler()
 
     # 每整分钟执行
-    sched.add_job(start_crawling, "cron", hour="*", minute="20")
+    sched.add_job(start_crawling, "cron", hour="* / 2")
     sched.start()
 
 
