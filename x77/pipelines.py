@@ -22,8 +22,9 @@ class x77ImagesPipeline(ImagesPipeline):
         if 'images' not in item: return
 
         # 为images创建一个目录用于存放图片
-        dirpath = os.path.join(settings.IMAGES_STORE, item['dirpath'])
-        os.makedirs(dirpath, exist_ok=True)
+        dirpath = item['dirpath']
+        full_dirpath = os.path.join(settings.IMAGES_STORE, dirpath)
+        os.makedirs(full_dirpath, exist_ok=True)
 
         for i, image_url in enumerate(item['images']):
             _, extension = os.path.splitext(image_url)
@@ -34,12 +35,14 @@ class x77ImagesPipeline(ImagesPipeline):
 
             if 'context' in item and item['context']:
                 # write the context file
-                context_file = os.path.join(dirpath, 'info.txt')
+                context_file = os.path.join(full_dirpath, 'info.txt')
                 if not os.path.exists(context_file):
                     with open(context_file, 'w', encoding="utf-8") as file:
                         file.write(item['context'])
 
     def file_path(self, request, response=None, info=None):
+        # file_path必须使用相对路径，因为在scrapy中会用源路径.join(相对路径)
+        print("filepath: %s" % request.meta["filename"])
         return request.meta["filename"]
 
 
@@ -76,15 +79,15 @@ Content-Disposition: form-data; name="rulesubmit"
 
     def handle_torrent_download(self, item, info):
         dirpath = item['dirpath']
+        full_dirpath = os.path.join(settings.FILES_STORE, dirpath)
 
-        if not os.path.isdir(os.path.join(settings.FILES_STORE, dirpath)):
-            os.makedirs(os.path.join(settings.FILES_STORE, dirpath))
+        if not os.path.isdir(full_dirpath):
+            os.makedirs(full_dirpath)
 
         for filename, link in zip(item['filenames'], item['files']):
             # 如果文件已存在，直接忽略该文件
-            filepath = os.path.join(settings.FILES_STORE, dirpath, filename)
-            if os.path.exists(filepath):
-                continue
+            if os.path.exists(os.path.join(full_dirpath, filename)): continue
+            filepath = os.path.join(dirpath, filename)
             if link.find("rmdown") > 0 or link.find("imedown") > 0:
                 yield scrapy.Request(link, meta={'filename': filepath})
             elif link.find("luludown") > 0:
@@ -101,6 +104,8 @@ Content-Disposition: form-data; name="rulesubmit"
             yield from self.handle_torrent_download(item, info)
 
     def file_path(self, request, response=None, info=None):
+        # file_path必须使用相对路径，因为在scrapy中会用源路径.join(相对路径)
+        print("filepath: %s" % request.meta["filename"])
         return request.meta["filename"]
 
 
