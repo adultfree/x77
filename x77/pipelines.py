@@ -76,8 +76,10 @@ Content-Disposition: form-data; name="rulesubmit"
 
     def handle_torrent_download(self, item, info):
         dirpath = item['dirpath']
+
         if not os.path.isdir(os.path.join(settings.FILES_STORE, dirpath)):
             os.makedirs(os.path.join(settings.FILES_STORE, dirpath))
+
         for filename, link in zip(item['filenames'], item['files']):
             # 如果文件已存在，直接忽略该文件
             filepath = os.path.join(settings.FILES_STORE, dirpath, filename)

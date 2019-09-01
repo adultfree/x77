@@ -28,7 +28,7 @@ class AsiaBTSpider(Spider):
         item = ImageItem()
         item['referer'] = response.request.url
         item['images'] = response.xpath('//div[@id="read_tpc"]/*/img/@src | //div[@id="read_tpc"]/img/@src').extract()
-        item['dirpath'] = os.path.join("亚洲BT", response.xpath('//h1[@id="subject_tpc"]/text()').extract()[1].replace('/', '.').replace('?', '.').replace(':', '.'))
+        item['dirpath'] = os.path.join(settings.IMAGES_STORE, "亚洲BT", response.xpath('//h1[@id="subject_tpc"]/text()').extract()[1].replace('/', '.').replace('?', '.').replace(':', '.'))
         context = response.xpath('//div[@id="read_tpc"]/*/text() | //div[@id="read_tpc"]/text()').extract()[0:-2]
         context = [e for e in context if e.strip()]
         item['context'] = "%s\n\n%s\n%s" % (response.url, "\n".join(context).strip(), "【下载地址】：" +
@@ -39,7 +39,7 @@ class AsiaBTSpider(Spider):
         item = FileItem()
         dirname = response.xpath('//h1[@id="subject_tpc"]/text()').extract()[1].replace('/', '.').replace('?', '.').replace(':', '.')
         item['referer'] = response.request.url
-        item['dirpath'] = os.path.join("亚洲BT", dirname)
+        item['dirpath'] = os.path.join(settings.IMAGES_STORE, "亚洲BT", dirname)
         torrents = response.xpath('//div[@id="read_tpc"]/*/a/@href | //div[@id="read_tpc"]/a/@href').extract()
 
         item['files'] = []

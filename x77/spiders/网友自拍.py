@@ -22,5 +22,5 @@ class SelfiePhotoSpider(Spider):
         item = ImageItem()
         item['referer'] = response.request.url
         item['images'] = response.xpath('//div[@id="read_tpc"]/*/img/@src | //div[@id="read_tpc"]/img/@src').extract()
-        item['dirpath'] = os.path.join("网友自拍", response.xpath('//h1[@id="subject_tpc"]/text()').extract()[1].replace('/', '.').replace('?', '.').replace(':', '.'))
+        item['dirpath'] = os.path.join(settings.IMAGES_STORE, "网友自拍", response.xpath('//h1[@id="subject_tpc"]/text()').extract()[1].replace('/', '.').replace('?', '.').replace(':', '.'))
         yield item
