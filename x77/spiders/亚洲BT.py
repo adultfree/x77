@@ -11,19 +11,18 @@ from x77.spiders.spider import Spider
 class AsiaBTSpider(Spider):
     name = "asia_bt"
     page_range = settings.PAGE_RANGE
-    page_range = (1, 2)
+    # page_range = (1, 2)
     start_urls = ["http://%s/bbs/thread.php?fid=20&page=%d" % (settings.HOST, i) for i in range(*page_range)]
 
     def parse_page(self, response):
         item = self.get_topic_item(response)
         for (topic, url) in zip(item['topic'], item['link']):
-            if topic != "经典の亚洲无码精彩合集[10.29]":
-                # skip the scenario where the torrent already exists
-                dirname = topic.replace('/', '.').replace('?', '.').replace(':', '.')
-                dirpath = os.path.join("亚洲BT", dirname)
-                if os.path.isdir(dirpath) and glob.glob(os.path.join(dirpath, "*.torrent")):
-                    continue
-                yield scrapy.Request(url, callback=self.parse_topic)
+            # skip the scenario where the torrent already exists
+            dirname = topic.replace('/', '.').replace('?', '.').replace(':', '.')
+            dirpath = os.path.join("亚洲BT", dirname)
+            if os.path.isdir(dirpath) and glob.glob(os.path.join(dirpath, "*.torrent")):
+                continue
+            yield scrapy.Request(url, callback=self.parse_topic)
 
     def parse_item(self, response):
         item = ImageItem()
