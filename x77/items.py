@@ -23,3 +23,4 @@ class FileItem(scrapy.Item):
     files = scrapy.Field()
     filenames = scrapy.Field()
     dirpath = scrapy.Field()
+    cookie = scrapy.Field()

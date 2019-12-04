@@ -2,6 +2,7 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
+import copy
 import os
 
 import scrapy
@@ -88,7 +89,10 @@ Content-Disposition: form-data; name="rulesubmit"
             if os.path.exists(os.path.join(full_dirpath, filename)): continue
             filepath = os.path.join(dirpath, filename)
             if link.find("rmdown") > 0 or link.find("imedown") > 0:
-                yield scrapy.Request(link, meta={'filename': filepath})
+                if "cookie" in item:
+                    yield scrapy.Request(link, headers={"Cookie": item["cookie"]}, meta={'filename': filepath})
+                else:
+                    yield scrapy.Request(link, meta={'filename': filepath})
             elif link.find("luludown") > 0:
                 body = self.bodyStartWithRef + filename + self.bodyEnd
                 yield scrapy.Request(link, None, 'POST', self.headers, body, meta={'filename': filepath})
