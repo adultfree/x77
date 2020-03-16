@@ -36,6 +36,7 @@ root@adultfree:~/x77# scrapy crawl selfie_photo
 ```
 
 ## 注意事项
+
 在x77/settings.py文件中，有针对爬虫的各种设置。
 
 常用的设置包括：
@@ -46,6 +47,12 @@ root@adultfree:~/x77# scrapy crawl selfie_photo
  * 定义日志为文件、修改日志级别
 
 ## 爬取结果概览
-[网友自拍](https://raw.githubusercontent.com/adultfree/x77/master/images/selfie_photo_result.png)
-[亚洲BT](https://raw.githubusercontent.com/adultfree/x77/master/images/asia_bt_result.png)
-[亚洲BT种子细节](https://raw.githubusercontent.com/adultfree/x77/master/images/asia_bt_torrent_result.png)
+
+网友自拍爬取结果:
+![网友自拍](https://raw.githubusercontent.com/adultfree/x77/master/images/selfie_photo_result.png)
+
+亚洲BT爬取结果:
+![亚洲BT](https://raw.githubusercontent.com/adultfree/x77/master/images/asia_bt_result.png)
+
+亚洲BT图片及种子列表:
+![亚洲BT种子细节](https://raw.githubusercontent.com/adultfree/x77/master/images/asia_bt_torrent_result.png)
