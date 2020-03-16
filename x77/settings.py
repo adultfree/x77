@@ -14,8 +14,8 @@ BOT_NAME = 'x77'
 SPIDER_MODULES = ['x77.spiders']
 NEWSPIDER_MODULE = 'x77.spiders'
 
-# x77 URL
-HOST = "x77631.com"
+# 通过修改HOST可以替换为你本地速度最快的镜像
+HOST = "x779521.net"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'x77 (+http://www.yourdomain.com)'
@@ -37,8 +37,11 @@ DOWNLOAD_DELAY = 0.5
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = False
 
+# LOG_LEVEL为INFO时，只输出总结性的爬取信息；为DEBUG时，会把每次爬取的item数据打印到屏幕上
 LOG_LEVEL = 'DEBUG'
-LOG_FILE = "./scrapy-%s.log" % datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+# 若要将爬取的信息保存到文件中，可以解注释如下行
+# 默认LOG文件名格式x77/scrapy-20190918120324.log
+#LOG_FILE = "./scrapy-%s.log" % datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
 # Disable Telnet Console (enabled by default)
 # TELNETCONSOLE_ENABLED = False
@@ -74,6 +77,7 @@ ITEM_PIPELINES = {
     'x77.pipelines.x77FilesPipeline': 2,
 }
 
+# 默认情况下爬取的内容会保存在x77/data目录下
 CURRENT_DIR = os.path.abspath(os.curdir)
 IMAGES_STORE = os.path.join(CURRENT_DIR, "data")
 FILES_STORE = os.path.join(CURRENT_DIR, "data")
