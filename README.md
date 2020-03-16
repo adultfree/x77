@@ -44,3 +44,8 @@ root@adultfree:~/x77# scrapy crawl selfie_photo
  * 爬取页面范围
  * 爬取后数据的保存路径
  * 定义日志为文件、修改日志级别
+
+## 爬取结果概览
+[网友自拍](https://raw.githubusercontent.com/adultfree/x77/master/images/selfie_photo_result.png)
+[亚洲BT](https://raw.githubusercontent.com/adultfree/x77/master/images/asia_bt_result.png)
+[亚洲BT种子细节](https://raw.githubusercontent.com/adultfree/x77/master/images/asia_bt_torrent_result.png)
