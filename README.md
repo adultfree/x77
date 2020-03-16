@@ -12,12 +12,10 @@ Xiao77论坛从我读大学开始出现，陪我度过了许多难忘的夜晚�
 
 ## 爬取的板块
 
-* 亚洲BT
-* 网友自拍
-
 时过境迁，现在Xiao77论坛支持的板块越来越多，但我依然喜欢原来的味道，仅爬取BT板块和自拍板块。
 
-![Image of Main Page](https://raw.githubusercontent.com/adultfree/x77/master/images/main.png)
+* 亚洲BT
+* 网友自拍
 
 ## 使用方法
 
@@ -54,5 +52,5 @@ root@adultfree:~/x77# scrapy crawl selfie_photo
 #### 亚洲BT
 ![亚洲BT](https://raw.githubusercontent.com/adultfree/x77/master/images/asia_bt_result.png)
 
-#### 亚洲BT图片及种子:
+#### 图片及种子
 ![亚洲BT种子细节](https://raw.githubusercontent.com/adultfree/x77/master/images/asia_bt_torrent_result.png)
